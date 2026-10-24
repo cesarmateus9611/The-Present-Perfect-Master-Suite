@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Present Perfect Master Suite</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1e272e; color: #d2dae2; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; overflow-x: hidden; }
+        h1 { color: #0be881; margin-bottom: 5px; font-size: 2.8rem; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
+        .subtitle { color: #808e9b; margin-bottom: 20px; font-style: italic; font-size: 1.2rem; text-align: center; }
+        
+        /* Stats Dashboard */
+        .dashboard { display: flex; justify-content: space-between; width: 100%; max-width: 800px; background: #34495e; padding: 15px 30px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); font-size: 1.2rem; font-weight: bold; box-sizing: border-box; }
+        .stat { display: flex; align-items: center; gap: 10px; }
+        .score { color: #f1c40f; }
+        .lives { color: #ff3f34; }
+        .timer { color: #0fb9b1; }
+        
+        /* Main Container */
+        .container { background: #ecf0f1; color: #2c3e50; padding: 40px; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.5); max-width: 800px; width: 100%; text-align: center; position: relative; border-top: 8px solid #0be881; min-height: 350px; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; }
+        
+        .level-title { font-size: 1.5rem; color: #e67e22; margin-bottom: 20px; font-weight: 800; text-transform: uppercase; }
+        .question-text { font-size: 24px; font-weight: bold; margin-bottom: 30px; line-height: 1.4; color: #2c3e50; }
+        
+        /* Buttons & Interactions */
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
+        .btn-option { background: #3498db; color: white; border: none; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 0 #2980b9; }
+        .btn-option:hover { transform: translateY(2px); box-shadow: 0 2px 0 #2980b9; }
+        
+        /* Unscramble CSS */
+        .word-bank { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .word-block { background: #f39c12; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 18px; box-shadow: 0 3px 0 #d35400; transition: 0.1s; }
+        .word-block:active { transform: translateY(2px); box-shadow: 0 1px 0 #d35400; }
+        .answer-area { min-height: 60px; background: #bdc3c7; border: 3px dashed #7f8c8d; border-radius: 10px; margin-bottom: 20px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; padding: 10px; }
+        
+        /* Modals & Feedback */
+        .feedback { font-size: 20px; font-weight: bold; margin-top: 20px; padding: 15px; border-radius: 8px; display: none; }
+        .feedback.correct { background: #d5f5e3; color: #27ae60; border: 2px solid #2ecc71; }
+        .feedback.incorrect { background: #fadbd8; color: #c0392b; border: 2px solid #e74c3c; }
+        
+        .btn-start { background: #0be881; color: #1e272e; padding: 20px 40px; font-size: 24px; border: none; border-radius: 15px; font-weight: 900; cursor: pointer; box-shadow: 0 6px 0 #05c46b; margin-top: 20px; }
+        .btn-start:hover { transform: translateY(3px); box-shadow: 0 3px 0 #05c46b; }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <h1>🎮 The Present Perfect Suite</h1>
+    <div class="subtitle">3 Levels. Prove your Grammar Power!</div>
+
+    <div class="dashboard hidden" id="dashboard">
+        <div class="stat score">⭐ Score: <span id="score">0</span></div>
+        <div class="stat timer">⏱️ Time: <span id="time">00:00</span></div>
+        <div class="stat lives">❤️ Lives: <span id="lives">3</span></div>
+    </div>
+
+    <div class="container" id="main-container">
+        
+        <!-- Start Screen -->
+        <div id="start-screen">
+            <h2>Welcome to the Ultimate Challenge!</h2>
+            <p style="font-size: 18px; color: #7f8c8d;">Level 1: Ever/Never Rules<br>Level 2: Unscramble the Experience<br>Level 3: Irregular Participles</p>
+            <button class="btn-start" onclick="startGame()">START GAME</button>
+        </div>
+
+        <!-- Level 1: Multiple Choice -->
+        <div id="level-1" class="hidden">
+            <div class="level-title">Level 1: The Ever/Never Rules</div>
+            <div class="question-text" id="q-text-1">Loading...</div>
+            <div class="options-grid" id="options-1"></div>
+        </div>
+
+        <!-- Level 2: Unscramble -->
+        <div id="level-2" class="hidden">
+            <div class="level-title">Level 2: Syntax Builder</div>
+            <div class="question-text" id="q-text-2">Loading...</div>
+            <div class="answer-area" id="answer-area"></div>
+            <div class="word-bank" id="word-bank"></div>
+            <button class="btn-option" style="width: 200px; margin: 0 auto; display: block; background: #9b59b6; box-shadow: 0 4px 0 #8e44ad;" onclick="checkUnscramble()">Submit Answer</button>
+        </div>
+
+        <!-- Feedback Box -->
+        <div id="feedback-box" class="feedback"></div>
+        
+    </div>
+
+    <script>
+        // --- GAME DATA ---
+        const level1Data = [
+            { q: "________ she ________ sung in a community choir?", options: ["Have / ever", "Has / ever", "Has / never", "Have / never"], ans: "Has / ever" },
+            { q: "I have ________ swum in a polluted river. I protect the water!", options: ["ever", "never", "haven't", "didn't"], ans: "never" },
+            { q: "My friends ________ organized an eco-festival.", options: ["have", "has", "has ever", "have never ever"], ans: "have" },
+            { q: "We say: 'I have never played the violin.' Why is 'haven't never' wrong?", options: ["Because 'never' is already negative.", "Because we need 'ever'.", "Because the verb is irregular.", "It is correct."], ans: "Because 'never' is already negative." },
+            { q: "________ you ever ________ a tree in your neighborhood?", options: ["Have / plant", "Has / planted", "Have / planted", "Do / plant"], ans: "Have / planted" }
+        ];
+
+        const level2Data = [
+            { hint: "Make an affirmative sentence about a DJ.", words: ["Andrea", "has", "played", "electronic", "music", "in", "the", "park"], ans: "Andrea has played electronic music in the park" },
+            { hint: "Make a question about an orchestra.", words: ["Have", "you", "ever", "listened", "to", "a", "classical", "orchestra", "?"], ans: "Have you ever listened to a classical orchestra ?" },
+            { hint: "Make a negative sentence with NEVER.", words: ["My", "community", "has", "never", "cut", "down", "these", "trees"], ans: "My community has never cut down these trees" },
+            { hint: "Make a sentence about riding horses.", words: ["We", "have", "ridden", "horses", "near", "the", "river"], ans: "We have ridden horses near the river" }
+        ];
+
+        // --- GAME VARIABLES ---
+        let score = 0;
+        let lives = 3;
+        let currentLevel = 1;
+        let qIndex = 0;
+        let timerInterval;
+        let seconds = 0;
+        let currentUnscrambleAns = [];
+
+        // --- CORE FUNCTIONS ---
+        function startGame() {
+            document.getElementById("start-screen").classList.add("hidden");
+            document.getElementById("dashboard").classList.remove("hidden");
+            startTimer();
+            loadLevel1();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                seconds++;
+                let mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+                let secs = (seconds % 60).toString().padStart(2, '0');
+                document.getElementById("time").innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function updateDashboard() {
+            document.getElementById("score").innerText = score;
+            document.getElementById("lives").innerText = lives;
+            if (lives <= 0) gameOver(false);
+        }
+
+        function showFeedback(isCorrect, message, callback) {
+            const box = document.getElementById("feedback-box");
+            box.className = "feedback " + (isCorrect ? "correct" : "incorrect");
+            box.innerHTML = isCorrect ? `✅ CORRECT! ${message}` : `❌ INCORRECT! ${message}`;
+            box.style.display = "block";
+            
+            setTimeout(() => {
+                box.style.display = "none";
+                callback();
+            }, 2000);
+        }
+
+        function gameOver(win) {
+            clearInterval(timerInterval);
+            const container = document.getElementById("main-container");
+            if (win) {
+                container.innerHTML = `<h1>🏆 YOU WIN!</h1><h2>Score: ${score}</h2><h2>Time: ${document.getElementById("time").innerText}</h2><p>You are a Master of the Present Perfect and Buen Vivir!</p><button class="btn-start" onclick="location.reload()">Play Again</button>`;
+            } else {
+                container.innerHTML = `<h1>💀 GAME OVER</h1><h2>You ran out of lives!</h2><p>Review the rules of the Syntax Train and try again.</p><button class="btn-start" onclick="location.reload()">Try Again</button>`;
+            }
+        }
+
+        // --- LEVEL 1: EVER/NEVER ---
+        function loadLevel1() {
+            document.getElementById("level-1").classList.remove("hidden");
+            if (qIndex >= level1Data.length) {
+                document.getElementById("level-1").classList.add("hidden");
+                qIndex = 0;
+                currentLevel = 2;
+                loadLevel2();
+                return;
+            }
+
+            const q = level1Data[qIndex];
+            document.getElementById("q-text-1").innerText = q.q;
+            
+            const optionsDiv = document.getElementById("options-1");
+            optionsDiv.innerHTML = "";
+            
+            // Shuffle options
+            let opts = [...q.options].sort(() => Math.random() - 0.5);
+            
+            opts.forEach(opt => {
+                let btn = document.createElement("button");
+                btn.className = "btn-option";
+                btn.innerText = opt;
+                btn.onclick = () => checkLevel1(opt, q.ans);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function checkLevel1(selected, correct) {
+            if (selected === correct) {
+                score += 100;
+                updateDashboard();
+                showFeedback(true, "+100 Points!", () => { qIndex++; loadLevel1(); });
+            } else {
+                lives--;
+                updateDashboard();
+                if(lives > 0) showFeedback(false, `The correct answer was: ${correct}`, () => { qIndex++; loadLevel1(); });
+            }
+        }
+
+        // --- LEVEL 2: UNSCRAMBLE ---
+        function loadLevel2() {
+            document.getElementById("level-2").classList.remove("hidden");
+            if (qIndex >= level2Data.length) {
+                gameOver(true); // Game complete!
+                return;
+            }
+
+            currentUnscrambleAns = [];
+            const q = level2Data[qIndex];
+            document.getElementById("q-text-2").innerText = `Hint: ${q.hint}`;
+            
+            const bank = document.getElementById("word-bank");
+            const answerArea = document.getElementById("answer-area");
+            bank.innerHTML = "";
+            answerArea.innerHTML = "";
+
+            let shuffledWords = [...q.words].sort(() => Math.random() - 0.5);
+
+            shuffledWords.forEach(word => {
+                let block = document.createElement("div");
+                block.className = "word-block";
+                block.innerText = word;
+                block.onclick = () => moveToAnswer(block, word);
+                bank.appendChild(block);
+            });
+        }
+
+        function moveToAnswer(block, word) {
+            const answerArea = document.getElementById("answer-area");
+            const bank = document.getElementById("word-bank");
+            
+            if (block.parentElement === bank) {
+                answerArea.appendChild(block);
+                currentUnscrambleAns.push(word);
+            } else {
+                bank.appendChild(block);
+                currentUnscrambleAns = currentUnscrambleAns.filter(w => w !== word);
+            }
+        }
+
+        function checkUnscramble() {
+            const q = level2Data[qIndex];
+            const userStr = currentUnscrambleAns.join(" ");
+            
+            if (userStr === q.ans) {
+                score += 200;
+                updateDashboard();
+                showFeedback(true, "Perfect Syntax!", () => { qIndex++; loadLevel2(); });
+            } else {
+                lives--;
+                updateDashboard();
+                if(lives > 0) showFeedback(false, "Syntax Error! Check your word order.", () => { 
+                    // Reset blocks
+                    loadLevel2(); 
+                });
+            }
+        }
+    </script>
+</body>
+</html>
